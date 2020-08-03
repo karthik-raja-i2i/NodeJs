@@ -1,6 +1,7 @@
 module.exports = {
     HOST:'localhost',
     USER:'root',
-    PASSWORD:'',
-    DB: 'angular_blog'
+    PASSWORD:'NFS_most_wanted$88',
+    DB: 'i2i_blogs',
+    DIALECT: 'mysql'
 }
