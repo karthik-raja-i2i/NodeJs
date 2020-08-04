@@ -47,13 +47,14 @@ exports.signin = (req, res) => {
       where: {
         username: req.body.username
       },
+      include: Role
     })
       .then(user => {
         if (!user) {
           return res.status(404).send({ message: "User Not found." });
         }
   
-        var passwordIsValid = bcrypt.compareSync(
+        let passwordIsValid = bcrypt.compareSync(
           req.body.password,
           user.password
         );
@@ -65,20 +66,24 @@ exports.signin = (req, res) => {
           });
         }
   
-        var token = jwt.sign({ id: user.id }, config.secretKey, {
+        let token = jwt.sign({ data:{ 
+          id: user.id,
+          username: user.username,
+          role: user.role.name 
+        }
+        }, config.secretKey, {
           expiresIn: 86400 // 24 hours
         });
         let authority;
         user.getRole().then(role => {
-            // console.log(role)
             authority = `ROLE_${role.name.toUpperCase()}`
             res.status(200).send({
-                  id: user.id,
-                  username: user.username,
-                  email: user.email,
-                  roles: authority,
-                  accessToken: token
-                });
+              id: user.id,
+              username: user.username,
+              email: user.email,
+              roles: authority,
+              accessToken: token
+            });
         })
       })
       .catch(err => {

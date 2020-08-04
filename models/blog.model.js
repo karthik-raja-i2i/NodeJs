@@ -1,21 +1,21 @@
-// users table definition
+// blogs table definition
 // sequelize is the db connection instance
 module.exports = (sequelize,Sequelize) => {
-    const User = sequelize.define('users',{
+    const Blog = sequelize.define('blogs',{
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
           },
-        username: {
-            type: Sequelize.STRING
+        title : {
+            type:Sequelize.STRING
         },
-        email: {
-            type: Sequelize.STRING
+        content: {
+            type: Sequelize.TEXT
         },
-        password: {
+        status : {
             type: Sequelize.STRING
-        },
+        }
     })
-    return User
+    return Blog
 }

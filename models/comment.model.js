@@ -1,21 +1,24 @@
-// users table definition
+// comments table definition
 // sequelize is the db connection instance
 module.exports = (sequelize,Sequelize) => {
-    const User = sequelize.define('users',{
+    const Comment = sequelize.define('comments',{
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
           },
-        username: {
+        author : {
             type: Sequelize.STRING
         },
-        email: {
+        content: {
+            type: Sequelize.TEXT
+        },
+        status : {
             type: Sequelize.STRING
         },
-        password: {
-            type: Sequelize.STRING
-        },
+        repliesCount: {
+            type: Sequelize.INTEGER
+        }
     })
-    return User
+    return Comment
 }

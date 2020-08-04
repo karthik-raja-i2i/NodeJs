@@ -14,8 +14,6 @@ module.exports.checkDuplicateUsernameOrEmail = (req,res,next) => {
             });
             return
         };
-        
-
         User.findOne({
             where: {
                 email: req.body.email

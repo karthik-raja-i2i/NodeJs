@@ -1,10 +1,12 @@
+/* These methods act as authorization filters to different routes */
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config');
 const db = require('../models');
 const User = db.user;
 let userId = 0;
 
-
+// verifies if the jwt token is valid. If valid, the user id is set in the 
+// request object
 verifyToken = (req,res,next) => {
     const token = req.headers['x-access-token'];
     if(!token) {
@@ -20,7 +22,8 @@ verifyToken = (req,res,next) => {
                 message: 'Unauthorized'
             });
         }
-        userId = user.id;
+        userId = user.data.id;
+        req.userId = user.data.id;
         next();
     })
 }
@@ -97,5 +100,4 @@ const authJwt = {
     isModerator: isModerator
 };
 
-// module.exports = authJwt;
 module.exports = authJwt;
