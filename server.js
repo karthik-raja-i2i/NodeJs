@@ -18,10 +18,15 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use(cors(corsOptions));
 
-// db.sequelize.sync({force:false}).then(() => {
-//     console.log('created');
-//     initialize();
-// })
+// the db tables are created and altered when columns are changed
+// when sync({alter:true}) is set
+db.sequelize.sync({alter:true}).then(() => {
+    console.log('created');
+    // initialize();
+})
+
+// function to create roles for first time. when calling it,
+// set sync({force:true})
 
 // function initialize() {
 //     Role.create({
@@ -47,10 +52,10 @@ app.get("/", (req, res) => {
     res.json({ message: "Application running" });
   })
 
-//configuring routes to the server
+// configuring routes to the server
 // the server instance is set as the parameter
-//require('./routes')(app);
 require('./routes/auth.routes')(app);
+require('./routes/user.routes')(app);
 
 //starting the server at 3000 port
 app.listen(3000,()=> {
