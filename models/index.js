@@ -20,6 +20,7 @@ db.role = require('./role.model')(sequelize,Sequelize)
 db.blog = require('./blog.model')(sequelize,Sequelize)
 db.comment = require('./comment.model')(sequelize,Sequelize)
 db.reply = require('./reply.model')(sequelize,Sequelize)
+db.category = require('./category.model')(sequelize,Sequelize)
 
 // one role can be assigned to many users, but a user has only one role
 // so one-to-many mapping
@@ -40,6 +41,11 @@ db.comment.belongsTo(db.blog)
 // so one-to-many mapping
 db.comment.hasMany(db.reply)
 db.reply.belongsTo(db.comment)
+
+// a blog can be under many categories and also each category can have many blogs
+// so many-to-many mapping
+db.category.belongsToMany(db.blog,{through: 'blog_categories'})
+db.blog.belongsToMany(db.category,{through: 'blog_categories'})
 
 // roles
 db.ROLES = ['Super-admin','Admin','Author','Moderator']

@@ -9,6 +9,7 @@ module.exports = (app) => {
           );
         next();
     });
+    app.get('/blog/all',controller.getAllBlogs);
 
     app.get('/user/all',controller.allAccess);
 
@@ -27,5 +28,8 @@ module.exports = (app) => {
     app.put('/blog',[authJwt.verifyToken,authJwt.isAuthor],controller.authorArea);
 
     app.get('/blog/moderator/:id',[authJwt.verifyToken,authJwt.isModerator],controller.getBlogforModerator);
+
+    // app.post('/blog/add-category'[authJwt.verifyToken,authJwt.isModerator])
+
 
 }

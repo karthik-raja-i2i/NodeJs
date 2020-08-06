@@ -37,6 +37,7 @@ module.exports.checkRoleExists = (req,res,next) => {
             res.status(400).send({
                 message: 'Role does not exist'
             })
+            return;
         }
     }
     next()

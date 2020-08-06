@@ -9,37 +9,29 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require('bcryptjs');
 
 exports.signup = (req,res) => {
-    User.create({
-        username:req.body.username,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password,8)
-    })
-    .then(user => {
-        if(req.body.role.name) {
-            Role.findOne({
-                where: {
-                    name: req.body.role.name
-                }
-            }).then(role => {
-                user.setRole(role).then((user) => {
-                    res.status(200).send({
-                        message:'User added',
-                    })
-                })
-            })
-        } else {
-            user.setRole(4).then((user) => {
-                res.status(200).send({
-                    message:'User added',
-                })
-            })
-        }
-    })
-    .catch(err => {
+      if(req.body.role) {
+          Role.findOne({
+              where: {
+                  name: req.body.role.name
+              }
+          }).then(role => {
+            User.create({
+              username:req.body.username,
+              email: req.body.email,
+              password: bcrypt.hashSync(req.body.password,8)
+          }).then(user => {
+              user.setRole(role).then((user) => {
+                  res.status(200).send({
+                      message:'User added',
+                  })
+              })
+          })
+      }).catch(err => {
         res.status(500).send({
             message:err.message
         })
     })
+    } 
 }
 
 exports.signin = (req, res) => {

@@ -6,6 +6,7 @@ const Blog = db.blog;
 const Comment = db.comment;
 const User = db.user;
 const Reply = db.reply;
+const Category = db. category;
 
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
@@ -37,11 +38,20 @@ exports.authorArea = (req, res) => {
         }
       }).then(user => {
         blog.setUser(user).then(blog => {
-          res.status(200).send({
-            message:'blog added'
-          })
+          // res.status(200).send({
+          //   message:'blog added'
+          // })
+          console.log(user)
         })
       })
+      Category.findByPk(req.body.categoryId).then(category => {
+        blog.setCategory(category).then(blog => {
+          res.status(200).send({
+          message:'blog added',
+          blog: blog
+        })
+      })
+    })
     }).catch(err => {
       res.status(500).send({
           message:err.message
@@ -99,12 +109,14 @@ exports.getBlog = (req,res) => {
     where: {
       id:id
     },
-    include : {
+    include : [{
       model: Comment,
       include : {
         model: Reply
       }
-    }
+    },{
+      model:Category
+    }]
   }).then(blog => {
     res.status(200).send({
       message: 'blog found',
@@ -145,5 +157,30 @@ exports.getReplies = (req,res) => {
       message: 'replies found',
       replies: replies
     })
+  })
+}
+
+// exports.addCategory = (req,res) => {
+//   const category = await Category.create({
+//     name: req.body.name,
+//     status: 'active'
+//   })
+//   console.log(category)
+// }
+exports.getBlogByCategory = (req,res) => {
+  const id = req.params.id;
+}
+
+exports.getAllBlogs = (req,res) => {
+  Blog.findAll({
+    where: {
+      status: 'pending'
+    }
+  }).then(blogs => {
+    res.status(200).send({
+      message: 'blogs found',
+      blogs
+    })
+
   })
 }
