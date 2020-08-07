@@ -28,76 +28,28 @@ verifyToken = (req,res,next) => {
     })
 }
 
-isSuperAdmin = (req,res,next) => {
-    User.findByPk(userId).then(user => {
-        user.getRole().then(role => {
-            if(role.name == 'Super-admin') {
-                next();
-                return
-            }
-
-            res.status(403).send({
-                message: 'Not authorized'
+permittedRoles = (...allowedRoles) => {
+    const isAllowed = role => allowedRoles.indexOf(role) > -1;
+    
+    // return a middleware
+    return (req, res, next) => {
+        User.findByPk(userId).then(user => {
+            user.getRole().then(role => {
+                if (isAllowed(role.name)) {
+                    next(); // role is allowed, so continue on the next middleware
+                } else {
+                    res.status(403).send({
+                        message: 'Not authorized'
+                    })                
+                }
             })
-            return;
         })
-    })
-}
-
-isAdmin = (req,res,next) => {
-    User.findByPk(userId).then(user => {
-        user.getRole().then(role => {
-            if(role.name == 'Admin') {
-                next();
-                return
-            }
-
-            res.status(403).send({
-                message: 'Not authorized'
-            })
-            return;
-        })
-    })
-}
-
-isAuthor = (req,res,next) => {
-    User.findByPk(userId).then(user => {
-        user.getRole().then(role => {
-            if(role.name == 'Author') {
-                next();
-                return
-            }
-
-            res.status(403).send({
-                message: 'Not authorized'
-            })
-            return;
-        })
-    })
-}
-
-isModerator = (req,res,next) => {
-    User.findByPk(userId).then(user => {
-        user.getRole().then(role => {
-            if(role.name == 'Moderator') {
-                next();
-                return
-            }
-
-            res.status(403).send({
-                message: 'Not authorized'
-            })
-            return;
-        })
-    })
+    }
 }
 
 const authJwt = {
     verifyToken: verifyToken,
-    isSuperAdmin: isSuperAdmin,
-    isAdmin: isAdmin,
-    isAuthor: isAuthor,
-    isModerator: isModerator
+    hasPermission: permittedRoles
 };
 
 module.exports = authJwt;

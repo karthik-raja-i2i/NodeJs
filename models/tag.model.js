@@ -1,7 +1,7 @@
-// roles table definition
+// tags table definition
 // sequelize is the db connection instance
 module.exports = (sequelize,Sequelize) => {
-    const Role = sequelize.define('roles',{
+    const Tag = sequelize.define('tags',{
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -11,5 +11,5 @@ module.exports = (sequelize,Sequelize) => {
             type: Sequelize.STRING
         }
     })
-    return Role
+    return Tag
 }

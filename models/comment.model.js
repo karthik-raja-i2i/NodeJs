@@ -13,9 +13,6 @@ module.exports = (sequelize,Sequelize) => {
         content: {
             type: Sequelize.TEXT
         },
-        status : {
-            type: Sequelize.STRING
-        },
         repliesCount: {
             type: Sequelize.INTEGER
         }

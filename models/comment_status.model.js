@@ -1,15 +1,13 @@
-// roles table definition
-// sequelize is the db connection instance
 module.exports = (sequelize,Sequelize) => {
-    const Role = sequelize.define('roles',{
+    const CommentStatus = sequelize.define('comment_status',{
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
-            autoIncrement:true
+            autoIncrement: true
           },
-        name: {
+        status: {
             type: Sequelize.STRING
         }
     })
-    return Role
+    return CommentStatus
 }

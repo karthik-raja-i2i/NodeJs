@@ -21,13 +21,13 @@ module.exports = (app) => {
 
     app.get('/blog/comment/:id/replies',controller.getReplies)
 
-    app.get('/user/:id', [authJwt.verifyToken,authJwt.isSuperAdmin],controller.superAdminArea);
+    app.get('/user/:id', [authJwt.verifyToken,authJwt.hasPermission('Super-admin')],controller.superAdminArea);
 
-    app.post('/blog/add',[authJwt.verifyToken,authJwt.isAuthor],controller.authorArea);
+    app.post('/blog/add',controller.authorArea);
 
-    app.put('/blog',[authJwt.verifyToken,authJwt.isAuthor],controller.authorArea);
+    app.put('/blog',[authJwt.verifyToken,authJwt.hasPermission('Author')],controller.authorArea);
 
-    app.get('/blog/moderator/:id',[authJwt.verifyToken,authJwt.isModerator],controller.getBlogforModerator);
+    app.get('/blog/moderator/:id',[authJwt.verifyToken,authJwt.hasPermission('Moderator')],controller.getBlogforModerator);
 
     // app.post('/blog/add-category'[authJwt.verifyToken,authJwt.isModerator])
 

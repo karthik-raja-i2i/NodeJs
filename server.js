@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 const db = require('./models')
 const Role = db.role
+const Category = db.category
+const Statuses = db.status
 
 // create express server
 const app = express();
@@ -20,31 +22,67 @@ app.use(cors(corsOptions));
 
 // the db tables are created and altered when columns are changed
 // when sync({alter:true}) is set
-db.sequelize.sync({alter:true}).then(() => {
+db.sequelize.sync({force:true}).then(() => {
     console.log('created');
-    // initialize();
+    initialize();
+    createCategories();
 })
 
 // function to create roles for first time. when calling it,
 // set sync({force:true})
 function initialize() {
     Role.create({
-        id:1,
         name: db.ROLES[0]
     });
     Role.create({
-        id:2,
         name: db.ROLES[1]
     });
     Role.create({
-        id:3,
         name: db.ROLES[2]
     });
     Role.create({
-        id:4,
         name: db.ROLES[3]
     });
+    Role.create({
+        name: db.ROLES[4]
+    });
+    Role.create({
+        name: db.ROLES[5]
+    });
     
+}
+
+function createCategories() {
+    Category.create({
+        name: 'Fiction',
+        status: 'active'
+    });
+    Category.create({
+        name: 'Crime',
+        status: 'active'
+    });
+    Category.create({
+        name: 'Sci-fi',
+        status: 'active'
+    });
+    Category.create({
+        name: 'Drama',
+        status: 'active'
+    });
+    Category.create({
+        name: 'Adventure',
+        status: 'active'
+    });
+
+    Statuses.create({
+        status: 'approved'
+    });
+    Statuses.create({
+        status: 'pending'
+    });
+    Statuses.create({
+        status: 'rejected'
+    });
 }
 
 app.get("/", (req, res) => {

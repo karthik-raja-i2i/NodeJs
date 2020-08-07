@@ -7,6 +7,8 @@ const Comment = db.comment;
 const User = db.user;
 const Reply = db.reply;
 const Category = db. category;
+const Tag = db.tag;
+const Status = db.status;
 
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
@@ -27,10 +29,18 @@ exports.moderatorArea = (req, res) => {
 exports.authorArea = (req, res) => {
   const q = url.parse(req.url);
   if(q.pathname == '/blog/add') {
+    let tags = [];
+    console.log('TAGSSS',req.body.tags)
+    req.body.tags.forEach(tag => {
+      const tagName = {
+        name: tag
+      }
+      tags.push(tagName);
+    });
+    console.log(tags)
     Blog.create({
       title: req.body.title,
       content: req.body.content,
-      status : 'pending'
     }).then(blog => {
       User.findOne({
         where: {
@@ -44,14 +54,33 @@ exports.authorArea = (req, res) => {
           console.log(user)
         })
       })
-      Category.findByPk(req.body.categoryId).then(category => {
-        blog.setCategory(category).then(blog => {
-          res.status(200).send({
-          message:'blog added',
-          blog: blog
+      Category.findByPk(req.body.categoryId)
+          .then(category => {
+          blog.setCategories(category).then(blog => {
+            // res.status(200).send({
+            // message:'blog added',
+            // blog: blog
+          // })
+          console.log(blog)
         })
       })
-    })
+      Status.findByPk(1)
+        .then(status => {
+          console.log(status)
+          blog.setStatus(status).then(blog => {
+            console.log(blog)
+          })
+        })
+      Tag.bulkCreate(tags,{ignoreDuplicates:true}
+      ).then(tag => {
+            blog.setTags(tag)
+            .then(blog => {
+            res.status(200).send({
+            message:'blog added',
+            blog: blog
+          })
+        })
+      })
     }).catch(err => {
       res.status(500).send({
           message:err.message
@@ -115,7 +144,12 @@ exports.getBlog = (req,res) => {
         model: Reply
       }
     },{
-      model:Category
+      model:Category,
+      attributes: ['name','id']
+    },{
+      model:Tag,
+      attributes: ['name','id']
+
     }]
   }).then(blog => {
     res.status(200).send({
@@ -160,13 +194,17 @@ exports.getReplies = (req,res) => {
   })
 }
 
-// exports.addCategory = (req,res) => {
-//   const category = await Category.create({
-//     name: req.body.name,
-//     status: 'active'
-//   })
-//   console.log(category)
-// }
+exports.addCategory = (req,res) => {
+  Category.create({
+    name: req.body.name,
+    status: 'active'
+  }).then(category => {
+    res.status(200).send({
+      message: 'category added'
+    })
+  })
+}
+
 exports.getBlogByCategory = (req,res) => {
   const id = req.params.id;
 }

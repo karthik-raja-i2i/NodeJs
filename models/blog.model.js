@@ -1,5 +1,6 @@
 // blogs table definition
 // sequelize is the db connection instance
+
 module.exports = (sequelize,Sequelize) => {
     const Blog = sequelize.define('blogs',{
         id: {
@@ -12,10 +13,8 @@ module.exports = (sequelize,Sequelize) => {
         },
         content: {
             type: Sequelize.TEXT
-        },
-        status : {
-            type: Sequelize.STRING
         }
+        
     })
     return Blog
 }
